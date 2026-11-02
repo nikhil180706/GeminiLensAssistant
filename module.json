@@ -1,0 +1,11 @@
+{
+  "name": "Gemini Lens Assistant",
+  "id": "com.gemini.lensassistant",
+  "version": "1.0.0",
+  "description": "AI-powered Lens Studio 5.x Editor Assistant that connects to the Gemini API and directly executes Editor API commands to build and modify lenses.",
+  "main": "main.js",
+  "permissions": [
+    "network",
+    "scene_modification"
+  ]
+}
