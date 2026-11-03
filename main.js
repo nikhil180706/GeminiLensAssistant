@@ -276,7 +276,15 @@ const Studio = {
         if (!obj) return null;
         let comp = this.getComponent(obj, typeName);
         if (!comp && typeof obj.createComponent === 'function') {
-            comp = obj.createComponent(typeName);
+            try {
+                comp = obj.createComponent(typeName);
+            } catch (e1) {
+                if (typeName === "Component.Text") {
+                    try { comp = obj.createComponent("Component.Text3D"); } catch (e2) {}
+                } else if (typeName === "Component.Text3D") {
+                    try { comp = obj.createComponent("Component.Text"); } catch (e2) {}
+                }
+            }
         }
         return comp;
     },
@@ -485,16 +493,7 @@ function executeEditorScript(code, context, actionName = "Gemini AI Command") {
         );
     };
 
-    // If History stream is available, batch into a single Cmd+Z Undo entry
-    const history = Studio.history;
-    if (history && typeof history.executeAsGroup === 'function') {
-        try {
-            return history.executeAsGroup(actionName, executeBlock);
-        } catch (hErr) {
-            print(`[Gemini Assistant] History grouping note: ${hErr}. Falling back to direct run.`);
-        }
-    }
-
+    // Direct execution without executeAsGroup to avoid transaction collision rollback
     return executeBlock();
 }
 
