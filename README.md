@@ -1,38 +1,72 @@
-# Gemini Lens Assistant for Lens Studio 5.x
+# Gemini Lens Assistant Pro v2.0 for Lens Studio 5.x
+### Autonomous AI Engine: 1-Click Viral Snapchat Lenses, Real LUTs, Head Stickers, Face Retouch & Monetization SEO
 
-An AI-powered Editor Plugin for **Snap Lens Studio 5.x** that embeds an intelligent chat panel directly inside the Lens Studio UI. It connects to **Gemini 1.5 Pro** and gives the AI full, granular control over every aspect of Lens Studio: from creating complex 3D hierarchies to tweaking the subtlest component property.
+Gemini Lens Assistant Pro transforms **Snap Lens Studio 5.x** into an autonomous, money-making AR creation suite. Powered by **Google Gemini 3.5 Flash-Lite**, it gives creators and developers single-prompt autonomous control over the entire Lens Studio environment to design, optimize, and monetize high-value ($10K+) Snapchat lenses.
 
 ---
 
-## 🌟 Deep Control Capabilities
+## 🌟 Key Superpowers
 
-Gemini is not limited to simple object creation—it has full situational awareness and deep Editor API control:
+### 1. 🚀 1-Click Viral Preset Generators ($10K Monetization Ready)
+- **🌟 $10K Golden Hour Beauty Glow**:
+  - Native `RetouchVisual` (smooth porcelain skin, eye brightening, teeth whitening).
+  - Cinematic `CrispWarm` 3D Color Correction LUT.
+  - Directional golden hour KeyLight (warm sun shadows) + soft cyan RimLight.
+  - Floating extruded 3D gold typography (`✨ RADIANT GLOW`) hovering over the forehead and tracking head tilts.
+  - Royal Gold Crown / Butterfly accessories.
+- **🗿 Chill Guy & Viral Meme Radar**:
+  - Real-time head-tracked pixel thug life / chill sunglasses.
+  - Retro Sepia / Vintage 90s film LUT.
+  - Floating viral catchphrase typography (`CHILL GUY AURA`).
+- **🌸 Kawaii Anime & Manga Aesthetic**:
+  - Cute Red Devil Horns or Glowing Angel Halo tracking head.
+  - Soft pink cheek blush marks with sparkle glints.
+  - Vibrant Anime Beauty LUT.
+  - Floating 3D Text (`★ KAWAII AURA ★`).
+- **💿 Y2K Cyber Chrome**:
+  - Neon Cyan & Hot Magenta studio lights.
+  - Cyberpunk BlueOrange LUT.
+  - Floating chrome 3D text and futuristic visor.
+- **⚡ 60 FPS Mobile Optimization Audit**:
+  - Auto-checks scene draw calls, texture budgets (<4MB total lens size), single shadow-casting directional light, and guaranteed 60 FPS performance on both iPhone and budget Android devices.
 
-### 1. Real-Time Scene Awareness
-Every user prompt is dynamically enriched with a **live snapshot of your scene hierarchy, active components, and project assets**. Gemini always knows what objects exist in your project and can reference, modify, or delete them by name.
+---
 
-### 2. Full Hierarchy & Object Control
-- **Find**: Locates any object anywhere in the tree (`Studio.find("ObjectName")`, `Studio.findAll("Light")`).
-- **Create**: Creates objects with parent-child relationships (`Studio.createSceneObject("Child", parentObj)`).
-- **Duplicate**: Clones objects with all transforms and components (`Studio.duplicate("ObjectName", "NewName")`).
-- **Delete**: Cleans up unwanted objects (`Studio.delete("ObjectName")` or `obj.destroy()`).
+### 2. 🎨 Real Color Correction LUT Engine (40+ Built-in Looks)
+Instant preview transformation using Lens Studio's native post-processing shader graph:
+`Studio.applyColorCorrection(lutName)`
+- **Available LUTs**: `CrispWarm`, `Beauty`, `Cinematic`, `Warm`, `VintageWarm`, `Miami`, `Clean`, `InstantPhoto`, `Faded`, `RetroGame`, `Sepia`, `BW`, `Night`, `Brightening`, etc.
 
-### 3. Precision Transform Control
-- Local & World coordinates: Position, Euler angle rotation, and scale.
-- Helper: `Studio.setTransform(obj, { position: [0, 5, -50], rotationEuler: [0, 90, 0], scale: [2, 2, 2] })`.
+---
 
-### 4. Granular Component Manipulation
-Directly configures every component type:
-- **`Component.LightSource`**: Type (Directional, Point, Ambient, Spot), color, intensity, shadow casting.
-- **`Component.Camera`**: FOV, near/far clipping planes, camera type, clear colors, render targets.
-- **`Component.Text`**: Text string, size, font, colors, horizontal/vertical alignment.
-- **`Component.RenderMeshVisual`**: Meshes, materials, passes.
-- **`Component.Head` & `FaceRetouchVisual`**: Face tracking rigs and cosmetic effects.
-- **`Component.AudioComponent`**: Volume, looping, audio track assignments.
-- **`Component.ScreenTransform`**: 2D UI layouts, anchors, offsets.
+### 3. ✨ Built-in Face Retouch & Beauty Engine
+`Studio.applyFaceRetouch(options)`
+- Connects directly to Lens Studio 5's internal `RetouchVisual`.
+- Delivers flawless skin smoothing, eye whitening, teeth brightening, and portrait enhancement without requiring third-party plugins.
 
-### 5. Single-Step Undo (Cmd+Z)
-Every modification executed by Gemini is batched into Lens Studio's project history stream (`model.project.history.executeAsGroup`). Any AI modification can be undone in a single keystroke (**Cmd+Z** or the **Undo** button in the panel).
+---
+
+### 4. 👑 Real Head Tracking & Transparent Sticker Engine
+`Studio.createHeadBinding(name, attachmentPoint)`  
+`Studio.attachSticker(stickerName, parentObj, options)`
+- Tracks user head movement via `Component.Head` (`HeadCenter`, `CandideCenter`, `Forehead`).
+- Bundles real high-resolution transparent PNG stickers:
+  - `gold_crown.png`: Royal golden crown with ruby & sapphire jewels.
+  - `angel_halo.png`: Neon golden glowing angel halo.
+  - `anime_horns.png`: Sharp red manga devil horns.
+  - `chill_sunglasses.png`: Pixel black thug life sunglasses.
+  - `anime_blush.png`: Soft pink cheek blush with cute slanted lines.
+  - `gold_butterfly.png`: Floating golden luxury butterfly.
+  - `sparkle_stars.png`: Anime 4-point glitter sparkle stars.
+
+---
+
+### 5. 🏷️ AI Viral Trend Radar & Snapchat Monetization SEO
+`🔥 Trend Radar` analyzes current viral pop culture, news, and TikTok/Snap trends. Every generated lens automatically outputs:
+- **Lens Title**: High-converting, search-friendly 2-4 word title.
+- **Viral Hashtags**: 10-15 top-ranking search tags ready to copy-paste into Snapchat My Lenses.
+- **Monetization Category**: Snapchat Creator Rewards Program, Spotlight Challenges, and Brand Sponsorship tips.
+- **Publishing Checklist**: Direct path to hit the top-right **Publish** button (`Cmd+P`).
 
 ---
 
@@ -40,29 +74,34 @@ Every modification executed by Gemini is batched into Lens Studio's project hist
 
 ```
 GeminiLensAssistant/
-├── module.json         # Plugin manifest declaring "network" and "scene_modification"
-├── main.js             # Deep control Studio suite, UI panel, requester & execution engine
-├── config.example.json # Template for local API key configuration
-├── .gitignore          # Keeps secrets and local config safe from Git
-└── README.md           # Documentation and usage guide
+├── module.json         # Lens Studio 5.x plugin manifest ("network", "filesystem")
+├── main.js             # Autonomous Studio suite, dockable UI, execution engine
+├── config.json         # Local API key configuration (gitignored)
+├── config.example.json # Safe config template for public repository
+├── assets/
+│   ├── luts/           # 40+ real Color Correction LUTs (.png) & color_correction.graphShader
+│   └── stickers/       # Real transparent PNG stickers (crown, halo, horns, glasses, blush)
+├── .gitignore          # Excludes API keys and OS cache files
+└── README.md           # Documentation & monetization guide
 ```
 
 ---
 
-## 🚀 Quick Setup
+## 🚀 Setup & Installation
 
 ### Step 1: Add Local Plugin to Lens Studio 5.x
-1. Open **Lens Studio 5.x**.
-2. In the top menu, click **Window** > **Plugin Manager**.
-3. Click **Add Local Plugin** and select this `GeminiLensAssistant` folder.
-4. Allow requested permissions (**network** and **scene_modification**).
+1. Open **Lens Studio 5.x** (v5.24+).
+2. Go to **Preferences** > **Plugins** (or **Window** > **Plugin Manager**).
+3. Under **Additional Plugin Libraries**, add the folder:
+   `~/Desktop/LensStudioPlugins` (or your chosen path).
+4. Lens Studio will automatically validate and load `Gemini Lens Assistant Pro`.
 
 ### Step 2: Open the Panel
-- Go to **Window** > **Gemini Lens Assistant**.
-- Dock the panel into your workspace or keep it as a floating utility window.
+- Go to the top menu: **Window** > **Gemini Lens Assistant Pro**.
+- The panel docks into the left or right sidebar next to Scene Hierarchy / Inspector.
 
 ### Step 3: API Key
-- Enter your Gemini API key in the top **API Key** input field in the panel, or add it to a local `config.json`:
+- Enter your Google Gemini API key into the `Key:` field at the top of the panel, or store it in `config.json`:
   ```json
   {
     "apiKey": "YOUR_GEMINI_API_KEY_HERE"
@@ -71,16 +110,11 @@ GeminiLensAssistant/
 
 ---
 
-## 💬 Example Commands to Try
+## 💬 Single-Prompt Autonomous Commands
 
-- **Subtle property tweaks:**
-  - *"Change the color of KeyLight to soft orange and increase intensity to 2.5"*
-  - *"Set the FOV of MainCamera to 45 degrees"*
-  - *"Change the text of HeroTitle to 'Snapchat AR' and make it gold"*
-- **Hierarchy manipulation:**
-  - *"Duplicate KeyLight, rename it FillLight, and position it at (-30, 10, -40)"*
-  - *"Delete the object named UnusedSphere"*
-  - *"Create a parent object named 'Environment' and move all lights inside it"*
-- **AR Effects & Rigging:**
-  - *"Create a Face Tracking Head component object with FaceRetouch attached"*
-  - *"Add a 2D ScreenTransform Image on canvas"*
+Type any high-level concept or vibe into the prompt box and hit **🚀 Build Lens**:
+
+- *"Build a complete luxury golden-hour portrait lens with warm directional sunlight, soft cyan rim light, smooth face retouch, and floating 3D text '✨ RADIANT' above the head"*
+- *"Make a viral anime filter with devil horns, cheek blush, warm film colors, and a bold 3D floating title"*
+- *"Make a funny meme filter about the latest news with sunglasses and funny text"*
+- *"Build a cyberpunk Y2K filter with neon lights, chrome text, and retro LUT"*
