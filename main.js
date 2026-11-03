@@ -893,5 +893,3 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
         super.deinit();
     }
 }
-
-export default GeminiLensAssistantPanel;
