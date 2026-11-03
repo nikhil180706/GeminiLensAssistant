@@ -30,11 +30,20 @@ try {
     // No local config file present
 }
 
-const DEFAULT_GEMINI_API_KEY = localApiKey || "YOUR_API_KEY_HERE";
+const DEFAULT_GEMINI_API_KEY = "YOUR_API_KEY_HERE";
 let currentApiKey = DEFAULT_GEMINI_API_KEY;
 
 // Gemini API Endpoint (using ultra-fast active Gemini 3.5 Flash-Lite)
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent";
+
+// Universal print/console logger helper
+const safePrint = (typeof print === 'function') 
+    ? print 
+    : (typeof console !== 'undefined' && console.log ? console.log.bind(console) : () => {});
+
+if (typeof globalThis !== 'undefined') {
+    globalThis.print = safePrint;
+}
 
 // -------------------------------------------------------------------------
 // Universal Math Fallbacks for environments where global math types differ
@@ -316,7 +325,7 @@ const Studio = {
         }
 
         // Safe fallback proxy so subsequent property sets do not throw fatal crashes
-        print(`[Studio] Note: Could not attach component '${typeName}'. Using safe proxy.`);
+        safePrint(`[Studio] Note: Could not attach component '${typeName}'. Using safe proxy.`);
         return new Proxy({}, {
             get: () => () => {},
             set: () => true
@@ -334,7 +343,7 @@ const Studio = {
             try {
                 comp[key] = value;
             } catch (propErr) {
-                print(`[Studio] Could not set ${key} on ${typeName}: ${propErr}`);
+                safePrint(`[Studio] Could not set ${key} on ${typeName}: ${propErr}`);
             }
         }
         return comp;
@@ -490,6 +499,7 @@ function executeEditorScript(code, context, actionName = "Gemini AI Command") {
     // Ensure globals are active
     if (typeof globalThis !== 'undefined') {
         globalThis.Studio = Studio;
+        globalThis.print = safePrint;
         if (scene && typeof globalThis.scene === 'undefined') {
             globalThis.scene = scene;
         }
@@ -500,6 +510,7 @@ function executeEditorScript(code, context, actionName = "Gemini AI Command") {
         "scene",
         "model",
         "pluginSystem",
+        "print",
         "vec3",
         "vec2",
         "vec4",
@@ -519,6 +530,7 @@ function executeEditorScript(code, context, actionName = "Gemini AI Command") {
             scene,
             model,
             pluginSystem,
+            safePrint,
             FallbackVec3,
             FallbackVec2,
             FallbackVec4,
@@ -618,7 +630,7 @@ ${assetSnapshot}`;
             });
             return;
         } catch (netEx) {
-            print("[Gemini Assistant] LensStudio:Network error: " + netEx);
+            safePrint("[Gemini Assistant] LensStudio:Network error: " + netEx);
         }
     }
 
@@ -682,7 +694,7 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
                 this.model = pluginSystem.findInterface(Editor.Model.IModel);
             }
         } catch (e) {
-            print("[Gemini Assistant] Model interface lookup: " + e);
+            safePrint("[Gemini Assistant] Model interface lookup: " + e);
         }
 
         Studio.pluginSystem = pluginSystem;
