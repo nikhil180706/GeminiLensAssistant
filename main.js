@@ -642,7 +642,7 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
     constructor(pluginSystem, descriptor) {
         super(pluginSystem, descriptor);
         this.connections = [];
-        this.pluginSystem = pluginSystem;
+        this._pluginSys = pluginSystem;
 
         try {
             if (typeof Editor !== 'undefined' && Editor.Model && Editor.Model.IModel) {
@@ -811,7 +811,7 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
                             Studio: Studio,
                             scene: Studio.scene,
                             model: this.model,
-                            pluginSystem: this.pluginSystem
+                            pluginSystem: this._pluginSys || this.pluginSystem
                         };
 
                         executeEditorScript(executableCode, executionContext, `Gemini: ${promptText}`);
