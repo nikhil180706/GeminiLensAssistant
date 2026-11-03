@@ -33,8 +33,8 @@ try {
 const DEFAULT_GEMINI_API_KEY = localApiKey || "YOUR_API_KEY_HERE";
 let currentApiKey = DEFAULT_GEMINI_API_KEY;
 
-// Gemini API Endpoint
-const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent";
+// Gemini API Endpoint (using ultra-fast active Gemini 3.5 Flash-Lite)
+const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent";
 
 // -------------------------------------------------------------------------
 // Universal Math Fallbacks for environments where global math types differ
