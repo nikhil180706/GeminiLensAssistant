@@ -635,7 +635,7 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
             d.minimumSize = new Ui.Size(300, 400);
         }
         d.isUnique = true;
-        d.menuActionHierarchy = ["Window", "Gemini Lens Assistant"];
+        d.menuActionHierarchy = ["Window"];
         return d;
     }
 
