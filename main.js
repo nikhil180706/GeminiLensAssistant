@@ -1,5 +1,4 @@
-import PanelPlugin from 'LensStudio:PanelPlugin';
-import { Descriptor, DockState, Size } from 'LensStudio:PanelPlugin';
+import { PanelPlugin, Descriptor } from 'LensStudio:PanelPlugin';
 import * as Ui from 'LensStudio:Ui';
 import * as Network from 'LensStudio:Network';
 
@@ -628,9 +627,13 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
         d.id = "com.gemini.lensassistant";
         d.name = "Gemini Lens Assistant";
         d.description = "Deep AI integration panel that directly inspects, builds, and modifies Lens Studio scenes in real-time.";
-        d.defaultDockState = DockState.Attached;
-        d.defaultSize = new Size(400, 580);
-        d.minimumSize = new Size(300, 400);
+        if (Ui.DockState && Ui.DockState.Attached !== undefined) {
+            d.defaultDockState = Ui.DockState.Attached;
+        }
+        if (Ui.Size) {
+            d.defaultSize = new Ui.Size(400, 580);
+            d.minimumSize = new Ui.Size(300, 400);
+        }
         d.isUnique = true;
         d.menuActionHierarchy = ["Window", "Gemini Lens Assistant"];
         return d;
