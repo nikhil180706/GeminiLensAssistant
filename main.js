@@ -51,10 +51,49 @@ if (typeof globalThis !== 'undefined') {
 const FallbackVec2 = typeof vec2 !== 'undefined' ? vec2 : class { constructor(x=0, y=0) { this.x = x; this.y = y; } };
 const FallbackVec3 = typeof vec3 !== 'undefined' ? vec3 : class { constructor(x=0, y=0, z=0) { this.x = x; this.y = y; this.z = z; } };
 const FallbackVec4 = typeof vec4 !== 'undefined' ? vec4 : class { constructor(x=0, y=0, z=0, w=1) { this.x = x; this.y = y; this.z = z; this.w = w; } };
-const FallbackQuat = typeof quat !== 'undefined' ? quat : {
-    fromEulerAngles: (x, y, z) => ({ x, y, z, w: 1 }),
-    quat: () => ({ x: 0, y: 0, z: 0, w: 1 })
-};
+
+function makeSafeQuat() {
+    const qObj = (typeof quat !== 'undefined') ? quat : {};
+    const safeQ = {
+        fromEulerAngles: function(x=0, y=0, z=0) {
+            if (typeof qObj.fromEulerAngles === 'function') {
+                try { return qObj.fromEulerAngles(x, y, z); } catch (e) {}
+            }
+            if (typeof qObj.fromEulerVec === 'function') {
+                try { return qObj.fromEulerVec(new FallbackVec3(x, y, z)); } catch (e) {}
+            }
+            if (typeof qObj === 'function') {
+                try {
+                    const c1 = Math.cos(x / 2), s1 = Math.sin(x / 2);
+                    const c2 = Math.cos(y / 2), s2 = Math.sin(y / 2);
+                    const c3 = Math.cos(z / 2), s3 = Math.sin(z / 2);
+                    return new qObj(
+                        s1 * c2 * c3 + c1 * s2 * s3,
+                        c1 * s2 * c3 - s1 * c2 * s3,
+                        c1 * c2 * s3 + s1 * s2 * c3,
+                        c1 * c2 * c3 - s1 * s2 * s3
+                    );
+                } catch (e) {}
+            }
+            return { x: 0, y: 0, z: 0, w: 1 };
+        },
+        fromEulerVec: function(v) {
+            return this.fromEulerAngles(v ? v.x : 0, v ? v.y : 0, v ? v.z : 0);
+        }
+    };
+    if (typeof qObj === 'object' || typeof qObj === 'function') {
+        Object.setPrototypeOf(safeQ, qObj);
+    }
+    return safeQ;
+}
+const FallbackQuat = makeSafeQuat();
+
+if (typeof globalThis !== 'undefined') {
+    if (!globalThis.vec3) globalThis.vec3 = FallbackVec3;
+    if (!globalThis.vec2) globalThis.vec2 = FallbackVec2;
+    if (!globalThis.vec4) globalThis.vec4 = FallbackVec4;
+    if (!globalThis.quat) globalThis.quat = FallbackQuat;
+}
 
 // -------------------------------------------------------------------------
 // Comprehensive Studio Namespace & Editor Control Suite
@@ -192,6 +231,43 @@ const Studio = {
                 try { obj.setParent(parentObj); } catch (e) {}
             }
         }
+
+        // Safe transform wrapper to guard against native C++ overload mismatches
+        if (obj && typeof obj.getTransform === 'function') {
+            const originalGetTransform = obj.getTransform.bind(obj);
+            obj.getTransform = function() {
+                const t = originalGetTransform();
+                if (t && !t._safeWrapped) {
+                    t._safeWrapped = true;
+                    const origSetRot = t.setLocalRotation ? t.setLocalRotation.bind(t) : null;
+                    if (origSetRot) {
+                        t.setLocalRotation = function(r) {
+                            try { return origSetRot(r); } catch (e) {
+                                safePrint("[Studio] setLocalRotation note: " + e);
+                            }
+                        };
+                    }
+                    const origSetPos = t.setLocalPosition ? t.setLocalPosition.bind(t) : null;
+                    if (origSetPos) {
+                        t.setLocalPosition = function(p) {
+                            try { return origSetPos(p); } catch (e) {
+                                safePrint("[Studio] setLocalPosition note: " + e);
+                            }
+                        };
+                    }
+                    const origSetScale = t.setLocalScale ? t.setLocalScale.bind(t) : null;
+                    if (origSetScale) {
+                        t.setLocalScale = function(s) {
+                            try { return origSetScale(s); } catch (e) {
+                                safePrint("[Studio] setLocalScale note: " + e);
+                            }
+                        };
+                    }
+                }
+                return t;
+            };
+        }
+
         return obj;
     },
 
@@ -901,7 +977,9 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
                         appendChat("Status", "✓ Executed successfully! Scene Hierarchy updated.");
                         statusLabel.text = "<i>[Success]</i>";
                     } catch (execError) {
-                        appendChat("Execution Error", execError.message || String(execError));
+                        const errText = (execError.stack ? execError.stack : execError.message) || String(execError);
+                        safePrint("[Gemini Assistant] Error: " + errText);
+                        appendChat("Execution Error", errText);
                         statusLabel.text = "<i>[Error]</i>";
                     }
                 },
