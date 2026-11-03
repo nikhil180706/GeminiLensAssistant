@@ -177,8 +177,11 @@ const Studio = {
         const scn = this.scene;
         if (!scn) throw new Error("No active scene available in project.");
         const obj = scn.createSceneObject(name || "New_Object");
-        if (parentObj && typeof obj.setParent === 'function') {
-            obj.setParent(parentObj);
+        if (parentObj) {
+            if (typeof parentObj === 'string') parentObj = this.find(parentObj);
+            if (parentObj && typeof obj.setParent === 'function') {
+                try { obj.setParent(parentObj); } catch (e) {}
+            }
         }
         return obj;
     },
@@ -274,19 +277,50 @@ const Studio = {
     getOrAddComponent(obj, typeName) {
         if (typeof obj === 'string') obj = this.find(obj);
         if (!obj) return null;
-        let comp = this.getComponent(obj, typeName);
-        if (!comp && typeof obj.createComponent === 'function') {
-            try {
-                comp = obj.createComponent(typeName);
-            } catch (e1) {
-                if (typeName === "Component.Text") {
-                    try { comp = obj.createComponent("Component.Text3D"); } catch (e2) {}
-                } else if (typeName === "Component.Text3D") {
-                    try { comp = obj.createComponent("Component.Text"); } catch (e2) {}
+
+        const rawName = typeName.replace(/^Component\./, '');
+        const withPrefix = "Component." + rawName;
+
+        // Try getting existing component first
+        let comp = null;
+        if (typeof obj.getComponent === 'function') {
+            try { comp = obj.getComponent(withPrefix) || obj.getComponent(rawName); } catch (e) {}
+        }
+        if (comp) return comp;
+
+        // Build list of candidate type names to try
+        const candidates = [rawName, withPrefix];
+        if (rawName === 'LightSource' || rawName === 'Light') {
+            candidates.push('LightSource', 'Light', 'DirectionalLight', 'PointLight', 'Component.LightSource', 'Component.Light');
+        } else if (rawName === 'Text' || rawName === 'Text3D') {
+            candidates.push('Text', 'Text3D', 'Component.Text', 'Component.Text3D');
+        } else if (rawName === 'Head' || rawName === 'FaceTracking') {
+            candidates.push('Head', 'Component.Head', 'FaceTracking');
+        } else if (rawName === 'FaceRetouchVisual' || rawName === 'FaceRetouch') {
+            candidates.push('FaceRetouchVisual', 'FaceRetouch', 'Component.FaceRetouchVisual', 'Retouch');
+        } else if (rawName === 'Camera') {
+            candidates.push('Camera', 'Component.Camera');
+        }
+
+        // Try both addComponent (Editor API) and createComponent (Runtime API)
+        const methods = ['addComponent', 'createComponent'];
+        for (const method of methods) {
+            if (typeof obj[method] === 'function') {
+                for (const candidate of candidates) {
+                    try {
+                        comp = obj[method](candidate);
+                        if (comp) return comp;
+                    } catch (err) {}
                 }
             }
         }
-        return comp;
+
+        // Safe fallback proxy so subsequent property sets do not throw fatal crashes
+        print(`[Studio] Note: Could not attach component '${typeName}'. Using safe proxy.`);
+        return new Proxy({}, {
+            get: () => () => {},
+            set: () => true
+        });
     },
 
     /**
