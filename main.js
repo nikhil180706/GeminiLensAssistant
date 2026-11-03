@@ -723,7 +723,45 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
 
         mainLayout.addWidget(toolbarContainer);
 
-        // Quick Preset Action Chips
+        // Quick Preset Action Chips (Row 1: 1-Click $10K Pro Viral Archetypes)
+        const proPresetContainer = new Studio.ui.Widget(root);
+        const proPresetLayout = new Studio.ui.BoxLayout();
+        proPresetLayout.setDirection(Studio.ui.Direction.LeftToRight);
+        proPresetLayout.spacing = 4;
+        proPresetContainer.layout = proPresetLayout;
+
+        const proPresets = [
+            { 
+                label: "✨ $10K Beauty Glow", 
+                prompt: "Build an ultra-luxury $10K beauty lens: Create a Head Face Tracking object named 'BeautyRig' with Component.FaceRetouchVisual (subtle soft skin, eye whitening), a warm golden key light from top-front at (0, 30, -20) with intensity 1.8, a soft teal rim light behind at (0, 20, 20) with intensity 1.2, and set the camera clear color to crisp neutral." 
+            },
+            { 
+                label: "💿 Y2K Cyber Chrome", 
+                prompt: "Build a trending Y2K aesthetic lens: Create a floating 3D Text object named 'CYBER_HERO' with text 'AESTHETIC' at (0, 10, -50), a neon magenta directional light pointing from the left, a cyan fill light from the right, and a dark ambient light." 
+            },
+            { 
+                label: "🎮 Viral Tap Game", 
+                prompt: "Build an interactive viral game lens: Create a 2D ScreenTransform canvas with a title text 'TAP TO PLAY', a score counter text 'SCORE: 0' at the top-center, and attach a touch tap listener script component that increments the score and triggers a sound effect." 
+            },
+            { 
+                label: "⚡ 60FPS Mobile Opt", 
+                prompt: "Optimize this entire scene for maximum 60 FPS performance on both iOS and budget Android: Find all lights, ensure only ONE key light casts shadows, set shadow bias for clean mobile rendering, normalize camera clipping planes (near: 5, far: 500) to reduce depth buffer overhead, and remove any duplicate redundant objects." 
+            }
+        ];
+
+        proPresets.forEach((p) => {
+            const btn = new Studio.ui.PushButton(proPresetContainer);
+            btn.text = p.label;
+            if (btn.onClick) {
+                this.connections.push(btn.onClick.connect(() => {
+                    handleSend(p.prompt);
+                }));
+            }
+            proPresetLayout.addWidget(btn);
+        });
+        mainLayout.addWidget(proPresetContainer);
+
+        // Quick Preset Action Chips (Row 2: Scene Building Primitives)
         const presetContainer = new Studio.ui.Widget(root);
         const presetLayout = new Studio.ui.BoxLayout();
         presetLayout.setDirection(Studio.ui.Direction.LeftToRight);
@@ -732,8 +770,8 @@ export class GeminiLensAssistantPanel extends PanelPlugin {
 
         const presets = [
             { label: "+ 3D Text", prompt: "Create a 3D Text object named 'HeroTitle' with text 'Made with Gemini' and color gold at position (0, 0, -60)" },
-            { label: "+ Directional Light", prompt: "Create a Directional Light named 'KeyLight' with warm sunlight color, intensity 2.0, and enabled shadows" },
-            { label: "+ Camera", prompt: "Create a Perspective Camera named 'CinematicCamera' with 50 degree FOV" },
+            { label: "+ Studio Lights", prompt: "Create a 3-point studio lighting rig: warm KeyLight at (20, 30, -30), soft FillLight at (-20, 15, -30), and cool RimLight at (0, 40, 30)" },
+            { label: "+ Cinema Cam", prompt: "Create a Perspective Camera named 'CinematicCamera' with 50 degree FOV, positioned at (0, 0, 0)" },
             { label: "+ Face Rig", prompt: "Create a Face Tracking Head component object named 'FaceRig' with FaceRetouch attached" }
         ];
 
